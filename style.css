@@ -1,0 +1,275 @@
+:root {
+  --desk: #dfe6e8; 
+  --ink: #16212a; 
+  --muted: #51616b;
+  --paper: #f5f6f3; 
+  --paper-edge: #d9dcd6; 
+  --cover: #1f4d5c; 
+  --cover-ink: #eaf3f1; 
+  --accent: #2a47c9;
+  --btn: #16212a; 
+  --btn-ink: #f5f6f3;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px); 
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --w: min(40vw, 340px); 
+  --h: calc(var(--w) * 1.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --desk: #0f171c;
+    --muted: #9fb0b8;
+    --btn: #e6eeee;
+    --btn-ink: #0f171c;
+    --cover: #2b6a7c;
+  }
+}
+
+:root[data-theme="dark"] {
+  --desk: #0f171c;
+  --muted: #9fb0b8;
+  --btn: #e6eeee;
+  --btn-ink: #0f171c;
+  --cover: #2b6a7c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--desk);
+  color: var(--ink);
+  font-family: "Newsreader", Georgia, serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  overflow-x: hidden;
+}
+
+.stage {
+  perspective: 2200px;
+  padding: 10px;
+}
+
+.book {
+  position: relative;
+  width: calc(var(--w) * 2);
+  height: var(--h);
+  transition: transform .9s cubic-bezier(.4, .1, .2, 1);
+  transform: translateX(-25%);
+}
+
+.sheet {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform .9s cubic-bezier(.4, .1, .2, 1);
+}
+
+.sheet.flipped {
+  transform: rotateY(-180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  padding: 9% 9% 11%;
+  display: flex;
+  flex-direction: column;
+  gap: 3%;
+  overflow: hidden;
+  cursor: pointer;
+  font-size: clamp(11px, calc(var(--w) * .047), 17px);
+  line-height: 1.55;
+}
+
+.front {
+  border-radius: 0 8px 8px 0;
+  box-shadow: inset 14px 0 18px -14px rgba(0,0,0,.28), 4px 6px 18px rgba(0,0,0,.22);
+}
+
+.back {
+  transform: rotateY(180deg);
+  border-radius: 8px 0 0 8px;
+  box-shadow: inset -14px 0 18px -14px rgba(0,0,0,.28), -4px 6px 18px rgba(0,0,0,.18);
+}
+
+.face h2 {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.65em;
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+
+.face p {
+  margin: 0;
+  max-width: 34em;
+}
+
+.face p + p {
+  margin-top: .7em;
+}
+
+.face figure {
+  margin: 0;
+  flex: 1;
+  min-height: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--paper-edge);
+}
+
+.face.mixed figure {
+  flex: 0 0 46%;
+}
+
+.face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.face figcaption {
+  display: none;
+}
+
+.cap {
+  font-style: italic;
+  color: var(--muted);
+  font-size: .92em;
+}
+
+.num {
+  margin-top: auto;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-size: .8em;
+  color: var(--muted);
+}
+
+.back .num {
+  text-align: left;
+}
+
+.front .num {
+  text-align: right;
+}
+
+.face.cover {
+  background: var(--cover);
+  color: var(--cover-ink);
+  justify-content: center;
+  padding: 12%;
+}
+
+.face.cover h2 {
+  font-size: 2.6em;
+  line-height: 1.02;
+}
+
+.face.cover p {
+  font-style: italic;
+  opacity: .85;
+}
+
+.face.story figure {
+  flex: 0 0 52%;
+}
+
+.face .msg {
+  font-size: 1.22em;
+  line-height: 1.4;
+  font-style: italic;
+  max-width: none;
+  margin: auto 0;
+}
+
+.face.cover::before {
+  content: "";
+  position: absolute;
+  inset: 5%;
+  border: 1.5px solid rgba(234,243,241,.45);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+}
+
+.controls button {
+  background: var(--btn);
+  color: var(--btn-ink);
+  border: 0;
+  border-radius: 999px;
+  width: 46px;
+  height: 46px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.controls button:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+.controls button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+#status {
+  min-width: 110px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.tools button {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 600;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--muted);
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.tools button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+  :root {
+    --w: 44vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book, .sheet {
+    transition-duration: .01s;
+  }
+}

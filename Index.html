@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flip Book</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="style.css"/>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+</head>
+<body>
+<audio id="bgMusic" src="music/Novo Amor - Keep Me (official audio).mp3" preload="auto" loop></audio>  
+<div class="stage"><div class="book" id="book" aria-live="polite"></div></div>
+<div class="controls">
+  <button id="prev" aria-label="Previous page">&#8592;</button>
+  <span id="status"></span>
+  <button id="next" aria-label="Next page">&#8594;</button>
+</div>
+
+
+<script>
+
+var M = [
+["I always think that I’m unlovable.","lone|c:95,70,1.4|r:70,92|a:0,0,1,#566077|p:200,252,1.6,m|h:330,130,.8,g"],
+["I’m always alone, nothing to do, no one to talk to.","night|t:0,0|w:120,40,1.6|m:175,95,.8|a:0,0,1,#2f3560|p:300,255,1.6,m"],
+["Then I met you.","dawn|u:200,120,1.4|a:0,0,1|p:110,254,1.5,m|p:290,254,1.5,y|h:200,170,.9,r"],
+["Everything that I thought I would never feel, you made me feel.","dream|v:80,60,1,w|v:320,50,1.3,w|v:60,160,.8,w|v:340,150,.9,w|h:150,70,.8,r|h:250,60,1,r|h:200,110,.6,r|a:0,0,1,#9d86d6|p:200,254,1.7,m"],
+["You showed me I can be loved.","warm|u:320,60,1|a:0,0,1|p:180,254,1.6,m|p:230,254,1.6,y|h:205,110,1.4,r"],
+["You showed me that there are more things in life.","day|u:330,55,1|c:100,60,1,w|a:0,0,1|f:70,230,1,r|f:330,235,1,y|f:300,225,1,m|p:180,238,1.1,m|p:215,238,1.1,y"],
+["You never made me feel that I’m alone anymore.","night|t:0,0|m:320,55,1|a:0,0,1,#2f4a63|p:175,254,1.6,m|p:225,254,1.6,y|v:80,60,1"],
+["All the little things you did for me.","warm|a:0,0,1|p:130,254,1.5,y|p:270,254,1.5,m|i:200,236,1.3,r|h:200,150,.8,r"],
+["You stayed with me, through all the good times and bad times.","dawn|c:110,60,1.3|r:90,85|u:310,60,1|a:0,0,1|p:175,254,1.5,m|p:225,254,1.5,y"],
+["Whenever I’m hard to understand.","rain|z:140,110,2,w|a:0,0,1,#5a6384|p:140,254,1.5,m|p:260,254,1.5,y|h:260,150,.6,r"],
+["Whenever I’m hard to love.","rain|a:0,0,1,#5a6384|p:130,254,1.5,m|p:270,254,1.5,y|x:200,160,1.4"],
+["You stayed.","night|t:0,0|m:310,55,1|a:0,0,1,#2f3560|p:175,254,1.6,m|p:225,254,1.6,y|h:200,110,1,r"],
+["I always get scared.","lone|c:110,55,2,k|c:290,80,1.6,k|r:250,90|a:0,0,1,#4b536c|p:200,254,1.2,m"],
+["That one day, you’ll get tired of me.","rain|a:0,0,1,#566077|p:110,254,1.5,m|p:290,254,1.5,y|k:200,120,1.4"],
+["That you can’t stand my ugali anymore.","rain|z:140,110,1.6,w|a:0,0,1,#566077|p:140,254,1.5,m|p:290,254,1.5,y|q:290,95,1"],
+["That when you wake up, you wouldn’t love me anymore.","dawn|a:0,0,1,#8a6fb0|w:230,50,1.1|u:265,95,.45|e:140,245,1.5,r|q:120,110,1"],
+["I know that it’s bad to think that.","dream|a:0,0,1,#9d86d6|p:200,254,1.6,m|q:235,95,1.6|c:235,88,.7"],
+["That I shouldn’t think like that because it won’t happen.","dream|a:0,0,1,#9d86d6|p:200,254,1.6,m|q:235,95,1.6|h:235,90,.7,r"],
+["But I can’t stop being scared to lose you.","rain|a:0,0,1,#5a6384|p:175,254,1.6,m|p:225,254,1.6,y|v:130,110,.8|v:270,100,.8|c:90,60,1.1|r:70,85|h:200,120,1,r"],
+["I love you so much.","warm|a:0,0,1|h:200,115,3.2,r|p:140,254,1.4,m|p:260,254,1.4,y"],
+["I’m sorry I keep making mistakes.","rain|a:0,0,1,#5a6384|p:150,254,1.6,m|f:190,205,.9,r|p:260,254,1.5,y"],
+["I’m sorry that I’m hurting you.","rain|a:0,0,1,#5a6384|p:150,254,1.6,m|h:150,120,.9,g|p:260,254,1.5,y|c:300,70,1.2"],
+["I don’t ever want to lose you.","dream|a:0,0,1,#9d86d6|p:180,254,1.6,m|p:222,254,1.6,y|h:200,110,1.3,r|v:90,70,1,w|v:310,80,1,w"],
+["You mean everything to me.","gold|u:200,120,2|a:0,0,1|h:200,125,1.2,r|p:130,254,1.4,m|p:270,254,1.4,y"],
+["You are my everything.","gold|u:200,125,2.2|a:0,0,1|h:200,130,1.6,r|p:200,254,1.6,m"],
+["You are my world.","day|a:0,0,1|b:200,130,2|h:200,125,1,r|p:140,254,1.4,m|p:260,254,1.4,y"],
+["You are the most important person in my life.","night|t:0,0|h:200,100,2.4,r|v:120,90,1.2|v:290,110,1|a:0,0,1,#2f3560|p:200,254,1.5,m"],
+["You make everything better.","day|u:330,50,.8|a:0,0,1|f:60,215,1,r|f:110,225,1,y|f:290,222,1,m|f:340,215,1,r|p:175,254,1.5,m|p:225,254,1.5,y"],
+["I constantly pray that we would soon be married.","dream|g:200,120,2.6|v:120,80,1|v:290,70,1.2|v:100,160,.7|a:0,0,1,#9d86d6"],
+["And dream about the life we would have in the future.","dawn|u:70,70,1|a:0,0,1|o:280,240,1.7,r|p:170,254,1.4,m|p:215,254,1.4,y|f:340,240,1,y"],
+["Everything I want to achieve in life, I want to be beside you.","day|c:100,60,1,w|u:340,50,.8|a:0,0,1|n:250,235,2|p:130,254,1.3,m|p:175,254,1.3,y"],
+["Every dream, I always want to achieve with you beside me.","night|t:0,0|m:80,70,.8|n:250,235,2|p:120,254,1.3,m|p:165,254,1.3,y"],
+["I want to grow with you.","day|u:330,50,.8|a:0,0,1|s:140,245,2.2|s:260,245,2.2|h:200,150,.8,r"],
+["I want to spend every second, every minute, every hour, everyday, every month, and every year with you.","warm|k:200,110,2.2|h:200,110,.9,r|a:0,0,1|p:130,254,1.3,m|p:270,254,1.3,y"],
+["I can’t see my future without you.","dawn|u:200,95,1.6|a:0,0,1|p:182,238,1.1,m|p:218,238,1.1,y"],
+["I love you.","warm|h:200,115,3.4,r|v:100,70,1,w|v:310,60,1,w|v:330,170,.8,w|v:80,170,.8,w|a:0,0,1"],
+["Thank you for everything.","gold|a:0,0,1|f:150,200,1,r|f:200,190,1.2,y|f:250,200,1,m|h:200,110,1.2,r"],
+["Thank you for understanding me.","dream|a:0,0,1,#9d86d6|z:140,120,1.3,w|p:140,254,1.5,m|p:260,254,1.5,y|h:260,130,1,r"],
+["Thank you for staying by my side.","night|t:0,0|m:310,55,1|a:0,0,1,#2f3560|p:170,254,1.6,m|p:230,254,1.6,y"],
+["Thank you for all the little things you did for me.","warm|a:0,0,1|i:150,240,1.3,m|i:200,240,1.3,y|i:250,240,1.3,r|h:200,120,1,r"],
+["Thank you for being patient with me.","day|k:200,100,1.8|a:0,0,1|p:175,254,1.5,m|p:225,254,1.5,y|h:200,170,.7,r"],
+["Thank you for choosing me, whenever I’m hard to love.","dream|a:0,0,1,#9d86d6|p:130,254,1.5,m|p:270,254,1.5,y|x:200,160,1.3|v:200,80,1.2,w"],
+["Thank you for everything.","gold|a:0,0,1|f:100,230,1,r|f:300,230,1,y|p:175,254,1.6,m|p:225,254,1.6,y|h:200,100,1.5,r|v:200,50,1.2"],
+["Thank you for always loving me.","warm|a:0,0,1|p:180,254,1.6,m|p:230,254,1.6,y|h:205,105,1.2,r|h:140,80,.6,r|h:270,80,.6,r"],
+["I never want to lose you.","night|t:0,0|a:0,0,1,#2f3560|p:182,254,1.6,m|p:224,254,1.6,y|h:203,120,1.1,r"],
+["I will always and continue to love you.","dream|a:0,0,1,#9d86d6|8:200,120,2.4,r|v:110,70,1,w|v:300,70,1,w|p:150,254,1.3,m|p:250,254,1.3,y"],
+["I’m so lucky that out of the 8.3 billion people in the world, I get to love you and be loved by you.","night|t:0,0|d:0,0|p:180,254,1.6,m|p:230,254,1.6,y|h:205,110,1.4,r"],
+["I can’t wait for the life we will have together in the future.","dawn|u:80,70,1|a:0,0,1|o:260,240,1.8,r|p:140,254,1.4,m|p:185,254,1.4,y|f:340,240,1,y|h:260,130,.7,r"],
+["I can’t wait to spend everyday with you and wake up next to you.","dawn|a:0,0,1,#8a6fb0|w:230,45,1.2|u:265,95,.45|e:140,245,1.5,r|h:140,150,.8,r|v:80,80,1,w"],
+["I love you so much, wife.","warm|a:0,0,1|h:200,100,2.6,r|g:200,170,1.6|p:140,254,1.3,m|p:260,254,1.3,y"],
+["I can’t wait to be married to you.","gold|v:90,80,1.2,w|v:310,70,1.4,w|v:200,50,1,w|a:0,0,1|g:200,150,3|p:150,254,1.4,m|p:250,254,1.4,y|h:200,90,1,r"]
+];
+
+/* ---------- 1b. ILLUSTRATION LIBRARY ----------
+   Each item is drawn as key:x,y,size,color on a 400x280 canvas.
+   Colors: m me, y you, r red, w white, g gray, k dark, o gold, b teal (or any #hex). */
+var C = {m:"#6d5bd0",y:"#f2a65a",r:"#ee5d7a",w:"#ffffff",g:"#8b93a7",k:"#2a2d4a",o:"#ffd36b",b:"#5cc2a6"};
+var BG = {lone:["#4a5168","#9097ac"],rain:["#3d4460","#6d7692"],dawn:["#ffd8b0","#f7a6a0"],warm:["#ffe7c2","#f9b9ae"],night:["#1b1f4b","#3f4694"],day:["#bfe6f7","#fbf3d9"],dream:["#d0bcf6","#f9cadf"],gold:["#ffeaa9","#ffc4a2"]};
+function T(x,y,s,b){ return '<g transform="translate('+x+' '+y+') scale('+s+')">'+b+'</g>'; }
+var HEART = 'M0 12C-30 -8 -16 -30 0 -14C16 -30 30 -8 0 12Z';
+var L = {
+  p:function(x,y,s,c){ c=c||C.m; return T(x,y,s,'<circle cy="-50" r="15" fill="'+c+'"/><path d="M-21 0Q-21 -33 0 -33Q21 -33 21 0Z" fill="'+c+'"/>'); },
+  h:function(x,y,s,c){ return T(x,y,s,'<path d="'+HEART+'" fill="'+(c||C.r)+'"/>'); },
+  u:function(x,y,s,c){ c=c||C.o; return T(x,y,s,'<circle r="44" fill="'+c+'" opacity=".3"/><circle r="26" fill="'+c+'"/>'); },
+  m:function(x,y,s){ return T(x,y,s,'<path d="M0 -24A24 24 0 1 0 24 6A18 18 0 1 1 0 -24Z" fill="#f6f1de"/>'); },
+  t:function(){ var o='',i; for(i=0;i<22;i++) o+='<circle cx="'+((i*83+20)%400)+'" cy="'+((i*47%130)+10)+'" r="'+(1+(i%3)*.6)+'" fill="#fff" opacity=".8"/>'; return o; },
+  c:function(x,y,s,c){ return T(x,y,s,'<g fill="'+(c||C.g)+'"><ellipse rx="40" ry="15" cy="6"/><circle cx="-14" cy="-6" r="17"/><circle cx="12" cy="-10" r="21"/></g>'); },
+  r:function(x,y){ var o='',i; for(i=0;i<9;i++) o+='<path d="M'+(x+i*12)+' '+(y+(i%3)*9)+'l-4 14" stroke="#cfe0f5" stroke-width="2.4" stroke-linecap="round"/>'; return o; },
+  w:function(x,y,s){ return T(x,y,s,'<rect width="70" height="90" fill="#232a63" stroke="#efe9da" stroke-width="5"/><path d="M35 0V90M0 45H70" stroke="#efe9da" stroke-width="4"/>'); },
+  g:function(x,y,s,c){ return T(x,y,s,'<g fill="none" stroke="'+(c||C.o)+'" stroke-width="5"><circle cx="-11" r="17"/><circle cx="11" r="17"/></g>'); },
+  f:function(x,y,s,c){ return T(x,y,s,'<path d="M0 0V38" stroke="#3f9a72" stroke-width="3"/><circle r="10" fill="'+(c||C.r)+'"/><circle r="4" fill="'+C.o+'"/>'); },
+  o:function(x,y,s,c){ return T(x,y,s,'<rect x="-30" y="-32" width="60" height="32" fill="#fff"/><path d="M-37 -32L0 -62L37 -32Z" fill="'+(c||C.r)+'"/><rect x="-6" y="-18" width="12" height="18" fill="#c9a27a"/><rect x="14" y="-24" width="10" height="10" fill="'+C.o+'"/>'); },
+  a:function(x,y,s,c){ return '<path d="M0 280V232Q100 200 200 228T400 220V280Z" fill="'+(c||"#5fae8a")+'"/>'; },
+  k:function(x,y,s){ return T(x,y,s,'<circle r="24" fill="#fff" stroke="'+C.k+'" stroke-width="3"/><path d="M0 0V-14M0 0L10 6" stroke="'+C.k+'" stroke-width="3" stroke-linecap="round"/>'); },
+  b:function(x,y,s){ return T(x,y,s,'<circle r="26" fill="#4aa3d9"/><ellipse cx="-8" cy="-6" rx="9" ry="12" fill="#5fae8a"/><ellipse cx="11" cy="8" rx="8" ry="9" fill="#5fae8a"/>'); },
+  n:function(x,y,s){ return T(x,y,s,'<path d="M-62 0L-4 -78L58 0Z" fill="#7d86a8"/><path d="M-16 -54L-4 -78L8 -56Q-4 -50 -16 -54Z" fill="#fff"/><path d="M-4 -78V-100" stroke="'+C.k+'" stroke-width="2"/><path d="M-4 -100L14 -94L-4 -88Z" fill="'+C.r+'"/>'); },
+  s:function(x,y,s){ return T(x,y,s,'<path d="M0 0V-30" stroke="#3f9a72" stroke-width="4"/><ellipse cx="-10" cy="-28" rx="11" ry="5" transform="rotate(-25 -10 -28)" fill="#5fae8a"/><ellipse cx="10" cy="-34" rx="11" ry="5" transform="rotate(25 10 -34)" fill="#5fae8a"/>'); },
+  z:function(x,y,s,c){ return T(x,y,s,'<path d="M-30 0C-10 -34 40 -30 10 -8S-40 -34 -4 -20S36 -4 -20 -12" fill="none" stroke="'+(c||C.w)+'" stroke-width="3" stroke-linecap="round"/>'); },
+  x:function(x,y,s){ var pts='',i,r; for(i=0;i<14;i++){ r=i%2?20:34; pts+=(Math.cos(i*Math.PI/7)*r).toFixed(1)+','+(Math.sin(i*Math.PI/7)*r).toFixed(1)+' '; } return T(x,y,s,'<polygon points="'+pts+'" fill="'+C.g+'"/><path transform="scale(.8)" d="'+HEART+'" fill="'+C.r+'"/>'); },
+  e:function(x,y,s,c){ return T(x,y,s,'<rect x="-56" y="-20" width="112" height="20" rx="4" fill="#5b4a80"/><rect x="-56" y="-40" width="112" height="24" rx="8" fill="'+(c||C.r)+'"/><ellipse cx="-38" cy="-42" rx="16" ry="8" fill="#fff"/><circle cx="-38" cy="-52" r="9" fill="'+C.m+'"/>'); },
+  q:function(x,y,s){ return T(x,y,s,'<g fill="#fff" opacity=".92"><ellipse rx="40" ry="24"/><circle cx="-34" cy="30" r="6"/><circle cx="-46" cy="42" r="3.5"/></g>'); },
+  i:function(x,y,s,c){ return T(x,y,s,'<rect x="-16" y="-24" width="32" height="24" rx="2" fill="'+(c||C.r)+'"/><rect x="-3" y="-24" width="6" height="24" fill="#fff"/><path d="M0 -24C-14 -42 -22 -26 0 -24C22 -26 14 -42 0 -24Z" fill="#fff"/>'); },
+  d:function(){ var o='',i; for(i=0;i<46;i++) o+='<circle cx="'+((i*37%380)+10)+'" cy="'+(150+(i*23%95))+'" r="5" fill="'+C.g+'" opacity=".6"/>'; return o; },
+  8:function(x,y,s,c){ return T(x,y,s,'<path d="M0 0C-14 -26 -44 -26 -44 0S-14 26 0 0S44 -26 44 0S14 26 0 0Z" fill="none" stroke="'+(c||C.r)+'" stroke-width="6" stroke-linecap="round"/>'); },
+  v:function(x,y,s,c){ return T(x,y,s,'<path d="M0 -12Q2 -2 12 0Q2 2 0 12Q-2 2 -12 0Q-2 -2 0 -12Z" fill="'+(c||C.o)+'"/>'); }
+};
+var BGID = 0;
+function scene(spec){
+  var parts = spec.split("|"), bg = BG[parts[0]], out = "", i, q, a, c;
+  for (i = 1; i < parts.length; i++){
+    q = parts[i].split(":"); a = q[1].split(","); c = a[3];
+    out += L[q[0]](+a[0], +a[1], +a[2] || 1, c ? (C[c] || c) : null);
+  }
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+bg[0]+'"/><stop offset="1" stop-color="'+bg[1]+'"/></linearGradient></defs><rect width="400" height="280" fill="url(#g)"/>'+out+'</svg>';
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
+
+var pages = [{ type:"cover", title:"For you", body:"A little book of everything I feel" }];
+M.forEach(function(m, i){
+  pages.push({ type:"story", n:i+1, body:m[0], src:scene(m[1]), alt:"Illustration for page "+(i+1) });
+});
+pages.push({ type:"image", src:scene("night|t:0,0|a:0,0,1,#2f3560|8:200,120,2.6,r|p:170,254,1.5,m|p:230,254,1.5,y"), alt:"Two people under the night sky with an infinity heart" });
+pages.push({ type:"cover", title:"Forever", body:"" });
+
+/* ---------- 2. BUILD THE BOOK ---------- */
+var book = document.getElementById("book");
+var statusEl = document.getElementById("status");
+var prevBtn = document.getElementById("prev"), nextBtn = document.getElementById("next");
+
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function paras(b){ return (Array.isArray(b) ? b : [b]).filter(Boolean).map(function(t){ return "<p>"+esc(t)+"</p>"; }).join(""); }
+
+function pageHTML(p, n){
+  var num = '<div class="num">'+(p.n || n)+'</div>';
+  if (p.type === "cover") return '<h2>'+esc(p.title)+'</h2>' + (p.body ? paras(p.body) : "");
+  var img = p.src ? '<figure><img src="'+p.src+'" alt="'+esc(p.alt || p.title || p.caption || "Illustration")+'"></figure>' : "";
+  if (p.type === "story") return img + '<p class="msg">'+esc(p.body)+'</p>' + num;
+  if (p.type === "image") return img + (p.caption ? '<p class="cap">'+esc(p.caption)+'</p>' : "") + num;
+  if (p.type === "mixed") return img + '<h2>'+esc(p.title || "")+'</h2>' + paras(p.body) + num;
+  return '<h2>'+esc(p.title || "")+'</h2>' + paras(p.body) + num;
+}
+
+var sheets = [], total = 0, cur = 0;
+
+function build(){
+  book.innerHTML = "";
+  sheets = [];
+  cur = 0;
+  for (var i = 0; i < pages.length; i += 2){
+    var f = pages[i], b = pages[i+1] || { type:"text", title:"", body:"" };
+    var el = document.createElement("div");
+    el.className = "sheet";
+    el.innerHTML =
+      '<div class="face front '+f.type+'">'+pageHTML(f, i+1)+'</div>' +
+      '<div class="face back '+b.type+'">'+pageHTML(b, i+2)+'</div>';
+    el.querySelector(".front").addEventListener("click", function(){ go(1); });
+    el.querySelector(".back").addEventListener("click", function(){ go(-1); });
+    book.appendChild(el);
+    sheets.push(el);
+  }
+  total = sheets.length;
+  setZ();
+  render();
+}
+
+function setZ(){
+  sheets.forEach(function(s, i){ s.style.zIndex = i < cur ? i : total - i; });
+}
+
+function render(){
+  sheets.forEach(function(s, i){ s.classList.toggle("flipped", i < cur); });
+  book.style.transform = cur === 0 ? "translateX(-25%)" : cur === total ? "translateX(25%)" : "translateX(0)";
+  prevBtn.disabled = cur === 0;
+  nextBtn.disabled = cur === total;
+  statusEl.textContent = cur === 0 ? "Cover" : cur === total ? "Back cover" : "Pages " + (cur*2) + "–" + (cur*2+1);
+}
+
+function go(dir){
+  var next = cur + dir;
+  if (next < 0 || next > total) return;
+  var moving = sheets[dir > 0 ? cur : next];
+  moving.style.zIndex = total + 2;           // keep the turning page on top
+  cur = next;
+  render();
+  setTimeout(setZ, 900);
+}
+
+nextBtn.addEventListener("click", function(){ go(1); });
+prevBtn.addEventListener("click", function(){ go(-1); });
+document.addEventListener("keydown", function(e){
+  if (e.key === "ArrowRight") go(1);
+  if (e.key === "ArrowLeft") go(-1);
+});
+var sx = null;
+document.addEventListener("touchstart", function(e){ sx = e.touches[0].clientX; }, {passive:true});
+document.addEventListener("touchend", function(e){
+  if (sx === null) return;
+  var dx = e.changedTouches[0].clientX - sx;
+  if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+  sx = null;
+}, {passive:true});
+
+// Grab the elements and the background audio
+const nextButton = document.getElementById('next');
+const prevButton = document.getElementById('prev');
+const bgMusic = document.getElementById('bgMusic');
+
+// Ensure the song loops seamlessly instead of ending abruptly
+if (bgMusic) {
+  bgMusic.loop = true;
+}
+
+// Function to start the music smoothly without restarting it
+function handlePageTurnAudio() {
+  if (bgMusic && bgMusic.paused) {
+    bgMusic.play().catch(error => {
+      console.log("Playback interaction registered but blocked by browser:", error);
+    });
+  }
+}
+
+// Attach the continuous playback logic directly to your layout controls
+nextButton.addEventListener('click', handlePageTurnAudio);
+prevButton.addEventListener('click', handlePageTurnAudio);
+
+
+build();
+</script>
+</body>
+</html>

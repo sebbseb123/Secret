@@ -75,9 +75,6 @@ var M = [
 ["I can’t wait to be married to you.","gold|v:90,80,1.2,w|v:310,70,1.4,w|v:200,50,1,w|a:0,0,1|g:200,150,3|p:150,254,1.4,m|p:250,254,1.4,y|h:200,90,1,r"]
 ];
 
-/* ---------- 1b. ILLUSTRATION LIBRARY ----------
-   Each item is drawn as key:x,y,size,color on a 400x280 canvas.
-   Colors: m me, y you, r red, w white, g gray, k dark, o gold, b teal (or any #hex). */
 var C = {m:"#6d5bd0",y:"#f2a65a",r:"#ee5d7a",w:"#ffffff",g:"#8b93a7",k:"#2a2d4a",o:"#ffd36b",b:"#5cc2a6"};
 var BG = {lone:["#4a5168","#9097ac"],rain:["#3d4460","#6d7692"],dawn:["#ffd8b0","#f7a6a0"],warm:["#ffe7c2","#f9b9ae"],night:["#1b1f4b","#3f4694"],day:["#bfe6f7","#fbf3d9"],dream:["#d0bcf6","#f9cadf"],gold:["#ffeaa9","#ffc4a2"]};
 function T(x,y,s,b){ return '<g transform="translate('+x+' '+y+') scale('+s+')">'+b+'</g>'; }
@@ -126,7 +123,7 @@ M.forEach(function(m, i){
 pages.push({ type:"image", src:scene("night|t:0,0|a:0,0,1,#2f3560|8:200,120,2.6,r|p:170,254,1.5,m|p:230,254,1.5,y"), alt:"Two people under the night sky with an infinity heart" });
 pages.push({ type:"cover", title:"Forever", body:"" });
 
-/* ---------- 2. BUILD THE BOOK ---------- */
+
 var book = document.getElementById("book");
 var statusEl = document.getElementById("status");
 var prevBtn = document.getElementById("prev"), nextBtn = document.getElementById("next");
@@ -204,17 +201,17 @@ document.addEventListener("touchend", function(e){
   sx = null;
 }, {passive:true});
 
-// Grab the elements and the background audio
+
 const nextButton = document.getElementById('next');
 const prevButton = document.getElementById('prev');
 const bgMusic = document.getElementById('bgMusic');
 
-// Ensure the song loops seamlessly instead of ending abruptly
+
 if (bgMusic) {
   bgMusic.loop = true;
 }
 
-// Function to start the music smoothly without restarting it
+
 function handlePageTurnAudio() {
   if (bgMusic && bgMusic.paused) {
     bgMusic.play().catch(error => {
@@ -223,7 +220,7 @@ function handlePageTurnAudio() {
   }
 }
 
-// Attach the continuous playback logic directly to your layout controls
+
 nextButton.addEventListener('click', handlePageTurnAudio);
 prevButton.addEventListener('click', handlePageTurnAudio);
 
